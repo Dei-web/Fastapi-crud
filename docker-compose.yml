@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: dei 
+      POSTGRES_PASSWORD: dei12345 
+      POSTGRES_DB: fastapi_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5431:5432"
+
+  fastapi:
+    build: .
+    restart: always
+    environment:
+      DATABASE_URL: postgres://dei:dei12345@db/fastapi_db
+      PYTHONPATH: ./src
+    ports:
+      - "8000:8000" 
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+
+volumes:
+  postgres_data:
