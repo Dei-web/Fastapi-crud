@@ -6,7 +6,7 @@ from Schemas.schemas import UsersSchema
 
 
 def Get_all_users(db: Session, skip: int = 0, limit: int = 100):
-    query = text("SELECT * FROM Get_all_users() OFFSET :skip LIMIT :limit")
+    query = text("SELECT * FROM Get_all_users(:skip, :limit)")
     result = db.execute(query, {"skip": skip, "limit": limit})
     users = [dict(row) for row in result]
     return users

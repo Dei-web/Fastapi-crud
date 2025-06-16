@@ -28,7 +28,9 @@ async def ALL_users(
 ):
     try:
         users = crud.Get_all_users(db, skip, limit)
-        return JSONResponse(content=users)
+        return Response(
+            code="200", status="success", message="list Users", result=users
+        )
 
     except Exception as e:
         print(f"Error al obtener usuarios : {e}")
@@ -40,10 +42,10 @@ async def Create_user(request: UsersSchema, db: Session = Depends(get_db)):
     try:
         user = crud.Create_user(db, request)
         return Response(
-            code="201", status="success", message="User create", result=user
+            code="200", status="success", message="User create", result=user
         )
     except Exception as error:
-        return Response(code="201", status="ERROR", message=str(error), result=None)
+        return Response(code="200", status="ERROR", message=str(error), result=None)
 
 
 @router.put("/delete")
@@ -65,7 +67,7 @@ async def Update_user(request: UsersSchema, db: Session = Depends(get_db)):
     try:
         user = crud.Update_user(db, request)
         return Response(
-            code="201", status="success", message="User create", result=user
+            code="200", status="success", message="User create", result=user
         )
     except Exception as error:
         return Response(code="500", status="ERROR", message=str(error), result=None)
