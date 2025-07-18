@@ -10,9 +10,7 @@ url = URL.create(
     host="db",
     port=5432,
     database="fastapi_db",
-    
 )
-
 
 engine = create_engine(url)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
