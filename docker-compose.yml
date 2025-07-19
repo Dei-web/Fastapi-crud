@@ -16,6 +16,7 @@ services:
   fastapi:
     build: .
     restart: always
+    working_dir: /app
     environment:
       DATABASE_URL: postgres://dei:dei12345@db/fastapi_db
       PYTHONPATH: ./src

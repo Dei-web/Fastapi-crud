@@ -1,10 +1,11 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import Mapped, mapped_column
 from .config import Base
 
 
 class User(Base):
     __tablename__ = "users"
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
-    correo = Column(String, index=True)
-    password = Column(String)
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column()
+    correo: Mapped[str] = mapped_column(unique=True)
+    password: Mapped[str] = mapped_column()

@@ -1,27 +1,26 @@
-from re import S
-from fastapi import HTTPException, Path, APIRouter, requests, responses, status
+# Third-Party Libraries
+from fastapi import APIRouter, Depends, HTTPException, Path, status
 from fastapi.responses import JSONResponse
-from autenticate.dependencies import Verify_Password
-from autenticate.jwt import create_access_token
-from fastapi import Depends
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.engine import result
+from sqlalchemy.orm import Session
 from starlette.routing import Router
-from fastapi.security import OAuth2PasswordBearer
+
+# Internal Application Imports
+from Controllers import crud
 from Database_config.config import SessionLocal
 from Database_config.models import User
-from sqlalchemy.orm import Session
-from autenticate.dependencies import get_current_user
 from Schemas.schemas import (
     Request,
     RequestUsers,
     Response,
+    TokenPayload,
+    UserDelete,
     UsersSchema,
     UsersSchemaCreate,
-    UserDelete,
-    TokenPayload,
 )
-from Controllers import crud
+from autenticate.dependencies import Verify_Password, get_current_user
+from autenticate.jwt import create_access_token
 
 router = APIRouter()
 
@@ -53,7 +52,9 @@ async def ALL_users(
 
 
 @router.post("/login")
-async def Login(form_data: OAuth2PasswordRequestForm, db: Session = Depends(get_db)):
+async def Login(
+    form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
+):
     user = crud.get_user_by_name(db, form_data.username)
     if not user:
         raise HTTPException(status_code=400, detail="user not found")
